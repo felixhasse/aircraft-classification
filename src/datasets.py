@@ -32,7 +32,6 @@ class FGVCDataset(Dataset):
                     f"./../data/images/{line.split(" ")[0]}.jpg")
             self.data = data
             labels = [line.split(" ", 1)[1].strip() for line in lines]
-            print(labels)
             self.labels = list(map(lambda x: torch.tensor(
                 [1 if x == c else 0 for c in self.classes], dtype=torch.float32), labels))
             
@@ -50,10 +49,10 @@ class FGVCDataset(Dataset):
         return image, label
 
     def getLabeledClasses(self, label: torch.Tensor):
-        return [(self.classes[i], label[i]) for i in range(len(label))]
+        return [(self.classes[i], label[i].item()) for i in range(len(label))]
     
     def getClassFromLabel(self, label: torch.Tensor):
-        return self.classes[torch.argmax(label)]
+        return self.classes[label.argmax().item()]
 
     def getNumClasses(self):
         return len(self.classes)
